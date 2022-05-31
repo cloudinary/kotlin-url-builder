@@ -78,7 +78,7 @@ class AuthTokenTest {
         val aclToken =
             AuthToken(key = KEY, duration = 300, acl = "/*/t_$user", startTime = 222222222)
         val cookieAclToken =
-            aclToken.generate("http://res.cloudinary.com/test123/image/upload/v1486020273/sample.jpg")
+            aclToken.generate("https://test123.media.cloudinary.net/v1486020273/sample.jpg")
         assertEquals(cookieToken, cookieAclToken)
     }
 
