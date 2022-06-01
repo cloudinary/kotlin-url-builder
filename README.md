@@ -33,7 +33,7 @@ Add the SDK to your project as a dependency, we recommend using a build manageme
 Add the Cloudinary Kotlin SDK to the dependencies section of your `build.gradle` file.
 
 ```
-implementation 'com.cloudinary:kotlin-url-builder:1.0.0'
+implementation 'com.cloudinary:kotlin-url-builder:0.1.0-beta'
 ```
 
 **Using Maven**:
@@ -43,7 +43,7 @@ Add the Cloudinary Kotlin SDK to the list of dependencies in your `pom.xml` file
 <dependency>
   <groupId>com.cloudinary</groupId>
   <artifactId>kotlin-url-builder</artifactId>
-  <version>1.0.0</version>
+  <version>0.1.0-beta</version>
   <type>pom</type>
 </dependency>
 ```
