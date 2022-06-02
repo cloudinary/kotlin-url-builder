@@ -207,8 +207,7 @@ private fun finalizeSource(
 
 private fun finalizeResourceType(
     resourceType: String?,
-    urlSuffix: String?,
-    useRootPath: Boolean
+    urlSuffix: String?
 ): String? {
     var mutableResourceType: String? = resourceType ?: DEFAULT_ASSET_TYPE
     var mutableType: String? = DEFAULT_DELIVERY_TYPE
@@ -231,14 +230,6 @@ private fun finalizeResourceType(
             mutableType = null
         } else {
             throw IllegalArgumentException("URL Suffix only supported for image/upload, image/private, raw/upload, image/authenticated  and video/upload")
-        }
-    }
-    if (useRootPath) {
-        if (mutableResourceType == "image" && mutableType == "upload" || mutableResourceType == "images" && mutableType.isNullOrBlank()) {
-            mutableResourceType = null
-            mutableType = null
-        } else {
-            throw IllegalArgumentException("Root path only supported for image/upload")
         }
     }
     var result = mutableResourceType
