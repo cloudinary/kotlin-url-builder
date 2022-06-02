@@ -21,7 +21,7 @@ class Cloudinary(val config: CloudinaryConfig) {
     val userAgent = "CloudinaryKotlin/$SDK_VERSION"
 
     fun raw(options: (Asset.Builder.() -> Unit)? = null): Asset {
-        val builder = Asset.Builder(config.cloudConfig, config.urlConfig, "raw")
+        val builder = Asset.Builder(config.cloudConfig, config.urlConfig)
         options?.let { builder.it() }
         return builder.build()
     }
