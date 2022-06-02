@@ -21,7 +21,7 @@ class Cloudinary(val config: CloudinaryConfig) {
     val userAgent = "CloudinaryKotlin/$SDK_VERSION"
 
     fun raw(options: (Asset.Builder.() -> Unit)? = null): Asset {
-        val builder = Asset.Builder(config.cloudConfig, config.urlConfig, "raw")
+        val builder = Asset.Builder(config.cloudConfig, config.urlConfig)
         options?.let { builder.it() }
         return builder.build()
     }
@@ -62,7 +62,7 @@ class Cloudinary(val config: CloudinaryConfig) {
     }
 
     companion object {
-        const val SDK_VERSION = "1.0.0"
+        const val SDK_VERSION = "0.1.0-beta"
 
         /**
          * This flag determines whether to throw an error when a transformation is created with invalid arguments.

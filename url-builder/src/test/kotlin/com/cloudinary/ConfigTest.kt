@@ -47,8 +47,6 @@ class ConfigTest {
         val config = UrlConfig()
 
         assertEquals(null, config.domain)
-        assertEquals(false, config.secureCdnSubdomain)
-        assertEquals(false, config.useRootPath)
     }
 
     @Test
@@ -56,21 +54,15 @@ class ConfigTest {
         val domain = "secure.api.com"
 
         val config = UrlConfig(
-            domain = domain,
-            secureCdnSubdomain = true,
-            useRootPath = true
+            domain = domain
         )
 
         assertEquals(domain, config.domain)
-        assertEquals(true, config.secureCdnSubdomain)
-        assertEquals(true, config.useRootPath)
 
         val copy = config.copy(
             domain = "copy.secure.distribution"
         )
 
         assertEquals("copy.secure.distribution", copy.domain)
-        assertEquals(true, copy.secureCdnSubdomain)
-        assertEquals(true, copy.useRootPath)
     }
 }

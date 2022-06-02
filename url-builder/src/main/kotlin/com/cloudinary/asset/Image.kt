@@ -17,19 +17,16 @@ class Image(
     version: String? = null,
     publicId: String? = null,
     extension: Any? = null,
-    urlSuffix: String? = null,
     private val transformation: ImageTransformation? = null
 ) : BaseAsset(
     cloudConfig,
     urlConfig,
     version,
     publicId,
-    extension,
-    urlSuffix,
-    ASSET_TYPE_IMAGE
+    extension
 ) {
     class Builder(cloudConfig: CloudConfig, urlConfig: UrlConfig) :
-        BaseAssetBuilder(cloudConfig, urlConfig, ASSET_TYPE_IMAGE), ITransformable<Builder> {
+        BaseAssetBuilder(cloudConfig, urlConfig), ITransformable<Builder> {
 
         private var transformation: ImageTransformation? = null
 
@@ -50,7 +47,6 @@ class Image(
             version,
             publicId,
             extension,
-            urlSuffix,
             transformation
         )
     }

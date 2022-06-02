@@ -33,27 +33,22 @@ class Asset(
     version: String? = null,
     publicId: String? = null,
     extension: Any? = null,
-    urlSuffix: String? = null,
-    assetType: String = DEFAULT_ASSET_TYPE,
     private val transformation: Transformation? = null
 ) : BaseAsset(
     cloudConfig,
     urlConfig,
     version,
     publicId,
-    extension,
-    urlSuffix,
-    assetType
+    extension
 ) {
 
     override fun getTransformationString() = transformation?.toString()
 
     class Builder(
         cloudConfig: CloudConfig,
-        urlConfig: UrlConfig,
-        assetType: String = DEFAULT_ASSET_TYPE
+        urlConfig: UrlConfig
     ) :
-        BaseAssetBuilder(cloudConfig, urlConfig, assetType), ITransformable<Builder> {
+        BaseAssetBuilder(cloudConfig, urlConfig), ITransformable<Builder> {
 
         private var transformation: Transformation? = null
 
@@ -76,8 +71,6 @@ class Asset(
             version,
             publicId,
             extension,
-            urlSuffix,
-            assetType,
             transformation
         )
     }
@@ -92,9 +85,7 @@ abstract class BaseAsset constructor(
     // fields
     private val version: String? = null,
     private val publicId: String? = null,
-    private val extension: Any? = null,
-    private val urlSuffix: String? = null,
-    private val assetType: String = DEFAULT_ASSET_TYPE
+    private val extension: Any? = null
 ) {
     fun generate(source: String? = null): String? {
         require(cloudConfig.cloudName.isNotBlank()) { "Must supply cloud_name in configuration" }
@@ -106,7 +97,7 @@ abstract class BaseAsset constructor(
         var signature = ""
 
         val finalizedSource =
-            finalizeSource(mutableSource, extension, urlSuffix)
+            finalizeSource(mutableSource, extension)
 
         mutableSource = finalizedSource.source
         val sourceToSign = finalizedSource.sourceToSign
@@ -175,28 +166,23 @@ abstract class BaseAsset constructor(
     abstract class BaseAssetBuilder
     internal constructor(
         protected val cloudConfig: CloudConfig,
-        protected val urlConfig: UrlConfig,
-        protected var assetType: String = DEFAULT_ASSET_TYPE
+        protected val urlConfig: UrlConfig
     ) {
 
         protected var version: String? = null
         protected var publicId: String? = null
         protected var extension: Any? = null
-        protected var urlSuffix: String? = null
 
         fun version(version: String) = apply { this.version = version }
         fun publicId(publicId: String) = apply { this.publicId = publicId }
         fun extension(extension: Format) = apply { this.extension = extension }
         fun extension(extension: String) = apply { this.extension = extension }
-        fun urlSuffix(urlSuffix: String) = apply { this.urlSuffix = urlSuffix }
-        fun assetType(assetType: String) = apply { this.assetType = assetType }
     }
 }
 
 private fun finalizeSource(
     source: String,
-    extension: Any?,
-    urlSuffix: String?
+    extension: Any?
 ): FinalizedSource {
     var mutableSource = source.cldMergeSlashedInUrl()
     var sourceToSign: String
@@ -210,10 +196,6 @@ private fun finalizeSource(
             throw RuntimeException(e)
         }
         sourceToSign = mutableSource
-        if (!urlSuffix.isNullOrBlank()) {
-            require(!(urlSuffix.contains(".") || urlSuffix.contains("/"))) { "url_suffix should not include . or /" }
-            mutableSource = "$mutableSource/$urlSuffix"
-        }
         if (extension != null) {
             mutableSource = "$mutableSource.$extension"
             sourceToSign = "$sourceToSign.$extension"

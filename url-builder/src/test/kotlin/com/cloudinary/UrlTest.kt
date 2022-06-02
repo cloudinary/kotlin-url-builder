@@ -12,23 +12,6 @@ private const val DEFAULT_UPLOAD_PATH = DEFAULT_ROOT_PATH
 
 class UrlTest {
     private val cloudinary = Cloudinary("cloudinary://a:b@test123?analytics=false")
-    private val cloudinaryPrivateCdn = Cloudinary(
-        cloudinary.config.copy(
-            urlConfig = cloudinary.config.urlConfig.copy()
-        )
-    )
-
-    private val cloudinaryPrivateCdnUseRootPath = Cloudinary(
-        cloudinary.config.copy(
-            urlConfig = cloudinary.config.urlConfig.copy()
-        )
-    )
-
-    private val cloudinaryPrivateCdnSignUrl = Cloudinary(
-        cloudinary.config.copy(
-            urlConfig = cloudinary.config.urlConfig.copy(signUrl = true)
-        )
-    )
 
     private val cloudinarySignedUrl =
         Cloudinary(cloudinary.config.copy(urlConfig = cloudinary.config.urlConfig.copy(signUrl = true)))
@@ -40,8 +23,6 @@ class UrlTest {
 
         val urlConfig = UrlConfig(
             domain = "secure.api.com",
-            secureCdnSubdomain = true,
-            useRootPath = true,
             analytics = false
         )
 
@@ -63,43 +44,6 @@ class UrlTest {
 
         assertEquals("${DEFAULT_ROOT_PATH}test?_a=$expectedAnalytics", result)
 
-    }
-
-    @Test
-    fun testUrlSuffixWithDotOrSlash() {
-        val errors = arrayOfNulls<Boolean>(4)
-        try {
-            cloudinary.image {
-                urlSuffix("dsfdfd.adsfad")
-            }.generate("publicId")
-        } catch (e: IllegalArgumentException) {
-            errors[0] = true
-        }
-        try {
-            cloudinary.image {
-                urlSuffix("dsfdfd/adsfad")
-            }.generate("publicId")
-        } catch (e: IllegalArgumentException) {
-            errors[1] = true
-        }
-        try {
-            cloudinary.image {
-                urlSuffix("dsfd.fd/adsfad")
-            }.generate("publicId")
-        } catch (e: IllegalArgumentException) {
-            errors[2] = true
-        }
-        try {
-            cloudinary.image {
-                urlSuffix("dsfdfdaddsfad")
-            }.generate("publicId")
-        } catch (e: IllegalArgumentException) {
-            errors[3] = true
-        }
-        assertTrue(errors[0]!!)
-        assertTrue(errors[1]!!)
-        assertTrue(errors[2]!!)
-        assertNull(errors[3])
     }
 
     @Test
@@ -182,105 +126,6 @@ class UrlTest {
     fun testResourceType() { // should use resource_type from options
         val result = cloudinary.raw().generate("test")
         assertEquals("${DEFAULT_ROOT_PATH}test", result)
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun testDisallowUrlSuffixWithSlash() {
-        cloudinaryPrivateCdn.image {
-            urlSuffix("hello/world")
-        }.generate("test")
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun testDisallowUrlSuffixWithDot() {
-        cloudinaryPrivateCdn.image {
-            urlSuffix("hello.world")
-        }.generate("test")
-    }
-
-    @Test
-    fun testPutFormatAfterUrlSuffix() {
-        val actual =
-            cloudinaryPrivateCdn.image {
-                urlSuffix("hello")
-                extension("jpg")
-            }.generate("test")
-        assertEquals("${DEFAULT_ROOT_PATH}test/hello.jpg", actual)
-    }
-
-    @Test
-    fun testNotSignTheUrlSuffix() {
-        val pattern = Pattern.compile("s--[0-9A-Za-z_-]{8}--")
-        var url = cloudinarySignedUrl.image {
-            extension("jpg")
-        }.generate("test")!!
-        var matcher = pattern.matcher(url)
-        matcher.find()
-        var expectedSignature = url.substring(matcher.start(), matcher.end())
-
-        var actual =
-            cloudinaryPrivateCdnSignUrl.image {
-                extension("jpg")
-                urlSuffix("hello")
-            }.generate("test")
-
-        assertEquals(
-            "$DEFAULT_ROOT_PATH$expectedSignature/test/hello.jpg",
-            actual
-        )
-
-        url = cloudinarySignedUrl.image {
-            extension("jpg")
-        }.generate("test")!!
-        matcher = pattern.matcher(url)
-        matcher.find()
-        expectedSignature = url.substring(matcher.start(), matcher.end())
-        actual = cloudinaryPrivateCdnSignUrl.image {
-            extension("jpg")
-            urlSuffix("hello")
-        }.generate("test")
-        assertEquals(
-            "${DEFAULT_ROOT_PATH}$expectedSignature/test/hello.jpg",
-            actual
-        )
-    }
-
-    @Test
-    fun testSupportUrlSuffixForRawUploads() {
-        val actual =
-            cloudinaryPrivateCdn.raw {
-                urlSuffix("hello")
-            }.generate("test")
-        assertEquals("${DEFAULT_ROOT_PATH}test/hello", actual)
-    }
-
-    @Test
-    fun testSupportUrlSuffixForVideoUploads() {
-        val actual =
-            cloudinaryPrivateCdn.video {
-                urlSuffix("hello")
-            }.generate("test")
-        assertEquals("${DEFAULT_ROOT_PATH}test/hello", actual)
-    }
-
-    @Test
-    fun testSupportUrlSuffixForAuthenticatedImages() {
-        val actual =
-            cloudinaryPrivateCdn.image {
-                urlSuffix("hello")
-            }
-                .generate("test")
-        assertEquals("${DEFAULT_ROOT_PATH}test/hello", actual)
-    }
-
-    @Test
-    fun testSupportUrlSuffixForPrivateImages() {
-        val actual =
-            cloudinaryPrivateCdn.image {
-                urlSuffix("hello")
-            }
-                .generate("test")
-        assertEquals("${DEFAULT_ROOT_PATH}test/hello", actual)
     }
 
     @Test
