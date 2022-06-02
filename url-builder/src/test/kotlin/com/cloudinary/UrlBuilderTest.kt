@@ -21,8 +21,6 @@ class UrlBuilderTest {
 
         val urlConfig = UrlConfig(
             domain = "secure.api.com",
-            secureCdnSubdomain = true,
-            useRootPath = true,
             analytics = false
         )
 
