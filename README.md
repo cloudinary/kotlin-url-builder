@@ -84,7 +84,8 @@ This will output the following url:
 `https://<cloud_name>.media.cloudinary.net/c_fill,h_150,w_100/sample.jpg`
 
 ## Contributions
-See [contributing guidelines](/CONTRIBUTING.md).
+- Ensure tests run locally
+- Open a PR and ensure Travis tests pass
 
 ## Get Help
 If you run into an issue or have a question, you can either:
