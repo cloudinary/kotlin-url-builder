@@ -84,11 +84,12 @@ This will output the following url:
 `https://<cloud_name>.media.cloudinary.net/c_fill,h_150,w_100/sample.jpg`
 
 ## Contributions
-See [contributing guidelines](/CONTRIBUTING.md).
+- Ensure tests run locally
+- Open a PR and ensure Travis tests pass
 
 ## Get Help
 If you run into an issue or have a question, you can either:
-- [Open a Github issue](https://github.com/cloudinary/cloudinary_kotlin/issues) (for issues related to the SDK)
+- [Open a Github issue](https://github.com/cloudinary/kotlin-url-builder/issues) (for issues related to the SDK)
 - [Open a support ticket](https://cloudinary.com/contact) (for issues related to your account)
 
 ## About Cloudinary
